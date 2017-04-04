@@ -7,11 +7,15 @@
 %ifnarch %{ix86} %{x8664} %{arm} aarch64 mips64 mips64le ppc64 ppc64le s390x
 %define	with_gccgo	1
 %endif
+%ifarch x32
+# gcc-go.x32 supports 64 ABI, so won't go with libseccomp.x32
+%undefine	with_tests
+%endif
 Summary:	Go language bindings for the libseccomp project
 Summary(pl.UTF-8):	Wiązania języka Go do projektu libseccomp
 Name:		golang-libseccomp
 Version:	0.9.0
-Release:	1
+Release:	2
 License:	BSD
 Group:		Libraries
 #Source0Download: https://github.com/seccomp/libseccomp-golang/releases
@@ -21,9 +25,11 @@ URL:		https://github.com/seccomp/libseccomp-golang
 %if %{with tests}
 %{?with_gccgo:BuildRequires:	gcc-go >= 6:4.8.4}
 %{!?with_gccgo:BuildRequires:	golang >= 1.2.1}
+BuildRequires:	libseccomp-devel >= 2.2.1
 %endif
 %{?with_gccgo:Requires:	gcc-go >= 6:4.8.4}
 %{!?with_gccgo:Requires:	golang >= 1.2.1}
+Requires:	libseccomp-devel >= 2.2.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
